@@ -4,7 +4,7 @@ type Collection = {
 };
 type Prompts = {
   id: string;
-  prompts: string;
+  prompt: string;
   imageURl: string;
 };
 type GeneratedImageURl = {

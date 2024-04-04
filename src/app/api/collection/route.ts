@@ -10,7 +10,6 @@ export async function GET(req: Request) {
       .from(prompt)
       .innerJoin(generatedImages, eq(prompt.id, generatedImages.promptId));
 
-    console.log({ collection });
     return NextResponse.json(collection);
   } catch (e) {
     return NextResponse.json(
