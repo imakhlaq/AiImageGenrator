@@ -1,24 +1,25 @@
 import { serial, text, pgTable, pgSchema, uuid } from "drizzle-orm/pg-core";
-import { relations } from "drizzle-orm";
+import { relations, sql } from "drizzle-orm";
 
 export const prompt = pgTable("prompts", {
-  id: uuid("id").primaryKey(),
+  id: uuid("id").defaultRandom().primaryKey().notNull(),
   prompt: text("prompt").notNull(),
+  imageURl: text("original_image_url").notNull(),
 });
 
-export const images = pgTable("prompt_images_URL", {
-  id: serial("uuid").primaryKey(),
-  imageURl: text("image_url").notNull(),
-  ownerId: uuid("author_id"),
+export const generatedImages = pgTable("generated_images_url", {
+  id: uuid("id").defaultRandom().primaryKey().notNull(),
+  imageURl: text("generated_image_url").notNull(),
+  promptId: uuid("prompt_id").references(() => prompt.id),
 });
 
-export const promptImgRel = relations(prompt, ({ many }) => ({
-  images: many(images),
+export const promptGeneratedImageRel = relations(prompt, ({ many }) => ({
+  generatedImages: many(generatedImages),
 }));
 
-export const imagePromptRel = relations(images, ({ one }) => ({
-  owner: one(prompt, {
-    fields: [images.ownerId],
-    references: [prompt.id],
+export const generatedImagesToPrompt = relations(
+  generatedImages,
+  ({ one }) => ({
+    originalImage: one(prompt),
   }),
-}));
+);
