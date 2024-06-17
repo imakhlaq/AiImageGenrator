@@ -25,6 +25,8 @@ export async function POST(req: Request) {
       },
     )) as string[];
 
+    console.log({ output });
+
     const id = await db
       .insert(prompt)
       .values({ prompt: data.prompt, imageURl: output[0] })
@@ -39,6 +41,7 @@ export async function POST(req: Request) {
 
     return NextResponse.json({ output });
   } catch (err) {
+    console.log({ line: 44, err });
     // @ts-ignore
     return NextResponse.json({ message: err?.message }, { status: 504 });
   }
